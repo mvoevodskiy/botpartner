@@ -1,0 +1,358 @@
+scripts:
+  c:
+    start:
+      trigger:
+        type: regexp
+        value:
+          - ^\/start$
+          - ^Start$
+          - ^Начать$
+          - ^Привет$
+          - ^Приветствую$
+          - ^Здравствуйте$
+          - ^Добрый день$
+          - ^Доброе утро$
+          - ^Добрый вечер$
+          - ^Доброй ночи$
+      command: true
+      message: |
+        Добро пожаловать!
+        Вы задумываетесь о чат-боте? Я помогу понять возможности и назначение ботов.
+        Нажмите одну из кнопок для демонстрации соответствующих возможностей.
+
+        В любой момент отправьте слово "Команды" для остановки текущей демонстрации и просмотра доступных команд.
+
+        Желаю отличных экспериментов и успешного дня!
+      keyboard_name: main
+      scope: c
+    commands:
+      trigger:
+        type: regexp
+        value:
+          - ^Команды$
+          - ^Список команд$
+      command: true
+      message: |
+        Нажмите одну из кнопок для демонстрации соответствующих возможностей.
+        В любой момент отправьте слово "Команды" для остановки текущей демонстрации и просмотра доступных команд.
+
+        Желаю отличных экспериментов и успешного дня!
+      keyboard_name: main
+
+      scope: c
+
+    help:
+      trigger:
+        type: regexp
+        value:
+          - ^\/help$
+          - ^Кнопки$
+          - ^Помощь$
+          - ^Бот помощь$
+      command: true
+      message: |
+        Я не распознал команду.
+        Нажмите одну из кнопок для демонстрации соответствующих возможностей.
+      keyboard_name: main
+      scope: c
+
+    description:
+      trigger:
+        type: regexp
+        value:
+          - ^Описание$
+      command: true
+      message: |
+        Чат-боты - незаметные помощники, которым можно делегировать большинство повседневных однотипных задач:
+        - опросы клиентов;
+        - контроль сотрудников по чек-листам;
+        - продажа товаров;
+        - информирование клиентов;
+        - и многое другое.
+
+        Всегда помните, что для ботов практически нет ограничений. Они могут намного больше, чем кажется с первого взгляда!
+
+        Чтобы ознакомиться с задачами, которые способны решать боты, нажмите кнопку "Сферы применения".
+      keyboard_name: main
+      scope: c
+
+    scopes:
+      trigger:
+        type: regexp
+        value:
+          - ^Сферы применения$
+      command: true
+      message: |
+        Ниже перечислены некоторые сферы применения ботов. Каждое решение имеет свое название, отражающее назначение.
+        После выбора каждого решения Вы сможете ознакомиться с описанием, возможностями и, если применимо, посмотреть демонстрацию.
+        - Анкеты, опросы
+        - Чек-листы (прием отчетов)
+        - Тех. поддержка
+        - Каталог статей
+        - Продажа товаров и услуг
+        - Сбор обращений клиентов
+        - Доступ к платному чату или группе
+        - Кросс-постинг и отложенная отправка
+
+        Указанными сферами и задачи возможности ботов не ограничены. Напишите Михаилу (@mvoevodskiy), он предложит Вам оптимальные решения для Ваших задач!
+      keyboard_name: main
+#      keyboard:
+#        buttons:
+#          - - Бот-опросник
+#            - Бот-контролёр
+#          - - (Демо) Анкета
+#            - (Демо) Фотоотчет
+#          - - Контакты
+#        options:
+#          - simple
+#          - oneTime
+#          - resize
+#          - extra
+      scope: c.scopes
+      c:
+        questioner:
+          trigger:
+            type: text
+            value:
+              - Бот-опросник
+          message: |
+            Бот-опросник служит
+          keyboard:
+            buttons:
+              - - Описание
+              - - Что умеет
+                - Демонстрация
+            options:
+              - simple
+              - oneTime
+              - resize
+              - extra
+          validate:
+            validator: text
+            success:
+              goto: c.scopes.c.questioner
+            failure:
+              goto: c.scopes
+          c:
+            desc:
+              trigger:
+                type: text
+                value:
+                  - Описание
+              message: |
+                Описание бот-опросника
+
+
+    contacts:
+      trigger:
+        type: regexp
+        value:
+          - ^Контакты$
+      command: true
+      message: |
+        Михаил Воеводский, создавший этого бота, с радостью ответит на любые Ваши вопросы по чат-ботам, подберет оптимальные решения для Ваших задач.
+        Если потребуется, он готов реализовать любые возможности ботам, которые Вам потребуются!
+
+        Напишите Михаилу прямо сейчас!
+        ВКонтакте и Telegram: @mvoevodskiy
+      keyboard_name: main
+      scope: c
+
+
+    help_hint:
+      trigger: null
+      message: Я не распознал ответ. Отправьте ответ в ожидаемом формате или отправьте слово "Помощь" для просмотра доступных команд и режимов.
+      store: false
+
+
+    form_desc:
+      trigger:
+        type: regexp
+        value:
+          - ^\(Демо\) Анкета$
+      message: |
+        Данный режим показывает, как возможно автоматизировать заполнение анкет.
+
+        Бот отправляет вопрос сообщением. Если ответ пользователя соответствует ожидаемому, бот пишет следующий вопрос.
+        Если ответ не соответствует, бот показывает подсказку и напоминает, на какой вопрос ждет ответ.
+
+        В демо только 3 вопроса, но ограничений нет. Если требуется, в зависимости от получаемых ответов возможно скрывать отдельные вопросы или же настроить совсем разные списки вопросов с ветвлением.
+      command: true
+      keyboard:
+        buttons:
+          - Заполнить анкету
+          - Список команд
+        options:
+          - simple
+          - oneTime
+          - resize
+          - extra
+      store: false
+    form:
+      trigger:
+        type: regexp
+        value:
+          - ^Заполнить анкету$
+      command: true
+      goto: c.form.c.q1
+      c:
+        help:
+          trigger: null
+          message: |
+            Некорректный ответ, попробуйте снова.
+            Для остановки отчета и просмотра доступных команд отправьте слово "Команды"
+          store: false
+        help_email:
+          trigger: null
+          message: |
+            Некорректный email, попробуйте снова.
+            Для остановки отчета и просмотра доступных команд отправьте слово "Команды"
+          store: false
+        q1:
+          trigger: null
+          message: Напишите свой адрес электронной почты
+          store: true
+          store-clean: true
+          validate:
+            validator: email
+            validator-params:
+            success:
+              goto: c.form.c.q2
+            failure:
+              help: c.form.c.help_email
+              goto: c.form.c.q1
+        q2:
+          trigger: null
+          message: Напишите свое имя (ФИО)
+          store: true
+          validate:
+            validator:
+            validator-params:
+            success:
+              goto: c.form.c.q3
+            failure:
+              help: c.form.c.help
+              goto: c.form.c.q2
+        q3:
+          trigger: null
+          message: Напишите свой номер телефона
+          store: true
+          validate:
+            validator: number
+            validator-params:
+            success:
+              goto: c.form.c.final
+            failure:
+              help: c.form.c.help
+              goto: c.form.c.q3
+        final:
+          message: Спасибо за заполнение анкеты!
+          action:
+            type: send
+            options:
+              from_scope: form
+              message: |
+                =======================
+                Ваша заполненная анкета
+                =======================
+              target:
+                tg:
+                  - 1857089
+                vk_bp:
+                  - 27509
+                  - __self__
+          keyboard_name: main
+
+    report_desc:
+      trigger:
+        type: regexp
+        value:
+          - ^\(Демо\) Фотоотч(е|ё)т$
+      message: |
+        Данный режим показывает, как возможно автоматизировать прием фотоочетов у сотрудников или привлеченных специалистов.
+
+        Бот отправляет сообщением, фото какого объекта отчитывающийся должен отправить. Если отправлено изображение, бот пишет следующий пункт.
+        Если фото нет, показывает подсказку и напоминает, какое фото необходимо отправить.
+
+        В демо только 2 пункта, но ограничений нет. В одном из проектов для 9 разных магазинов в каждом отчете до 40 пунктов.
+      command: true
+      keyboard:
+        buttons:
+          - Начать фотоотчет
+          - Список команд
+        options:
+          - simple
+          - oneTime
+          - resize
+          - extra
+      store: false
+    report:
+      trigger:
+        type: regexp
+        value:
+          - ^Начать фотоотч(е|ё)т$
+      goto: c.report.c.t1
+      command: true
+      store: true
+      c:
+        help_hint:
+          message: |
+            В режиме фотоотчета я принимаю только изображения. Для остановки отчета и просмотра доступных команд отправьте слово "Команды"
+          store: false
+        t1:
+          trigger: null
+          message: Отправьте красивое фото. Например, красивое фото себя :)
+          validate:
+            validator: photo
+            validator-params:
+            success:
+              goto: c.report.c.t2
+            failure:
+              help: c.help_hint
+              goto: c.report.c.t1
+          store: true
+        t2:
+          trigger: null
+          message: Отправьте фото любого текста. Или любого объекта вокруг себя.
+          validate:
+            validator: photo
+            validator-params:
+            success:
+              goto: c.report.c.final
+            failure:
+              help: c.help_hint
+              goto: c.report.c.t2
+          store: true
+        final:
+          message: |
+            Спасибо за предоставленный фотоотчет.
+            Успешного дня и высоких продаж!
+          keyboard_name: main
+    who:
+      trigger:
+        type: text
+        value: /who
+      action:
+        type: method
+        value: answerwho
+      command: true
+
+config:
+  defaults:
+    action: help
+    help: c.help_hint
+
+
+keyboards:
+  main:
+    buttons:
+      - - Описание
+        - Сферы применения
+      - - (Демо) Анкета
+        - (Демо) Фотоотчет
+      - - Контакты
+    options:
+      - simple
+      - oneTime
+      - resize
+      - extra
